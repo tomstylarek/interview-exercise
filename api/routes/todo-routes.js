@@ -12,4 +12,7 @@ router.patch('/setNewItem', todoControllers.setNewItem);
 // edit the item and response with the updated list of items
 router.patch('/editItem', todoControllers.editItem);
 
+// remove item from the list and response with the updated list of items
+router.patch('/removeItem', todoControllers.removeItem);
+
 module.exports = router;

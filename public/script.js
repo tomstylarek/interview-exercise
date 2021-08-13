@@ -1,6 +1,14 @@
 
-const removeItem = () => {
-
+const removeItem = (e) => {
+	const itemId = e.target.closest('li').dataset.id;
+	fetch(`/removeItem?id=${itemId}`, { method: "PATCH"})
+		.then(res => res.json())
+		.then(data => {
+			const todoList = document.getElementById("todo-list");
+    		const newItems = getItems(data);
+    		todoList.removeChild(document.getElementById('items'));
+    		todoList.appendChild(newItems);
+		})
 }
 
 // display form to edit the text of the item

@@ -7,7 +7,7 @@ const getItems = (req, res) => {
 }
 
 const setNewItem = (req, res) => {
-	items.push({ text: req.query.text, id: uuidv4() });
+	items.push({ text: req.query.text, id: uuidv4(), checked: false });
 
 	res.send(items);
 }
@@ -23,8 +23,19 @@ const editItem = (req, res) => {
 	res.send(items);
 }
 
+const removeItem = (req, res) => {
+	items.forEach((item, index) => {
+		if (item.id === req.query.id) {
+			items.splice(index, 1);
+		}
+	})
+
+	res.send(items);
+}
+
 module.exports = {
 	getItems,
 	setNewItem,
-	editItem
+	editItem,
+	removeItem
 }
