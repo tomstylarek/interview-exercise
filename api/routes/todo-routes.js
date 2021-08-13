@@ -9,4 +9,7 @@ router.get('/getItems', todoControllers.getItems);
 // add new item to the database and response with the updated list of items
 router.patch('/setNewItem', todoControllers.setNewItem);
 
+// edit the item and response with the updated list of items
+router.patch('/editItem', todoControllers.editItem);
+
 module.exports = router;
