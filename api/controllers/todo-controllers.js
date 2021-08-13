@@ -33,9 +33,25 @@ const removeItem = (req, res) => {
 	res.send(items);
 }
 
+const checkItem = (req, res) => {
+	console.log("checking");
+	items.forEach(item => {
+		if (item.id === req.query.id) {
+			if (item.checked) {
+				item.checked = false;
+			} else {
+				item.checked = true;
+			}
+		}
+	})
+
+	res.send(items);
+}
+
 module.exports = {
 	getItems,
 	setNewItem,
 	editItem,
-	removeItem
+	removeItem,
+	checkItem
 }

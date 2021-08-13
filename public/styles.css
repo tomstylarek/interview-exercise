@@ -1,3 +1,12 @@
+.item {
+	display: flex;
+	align-items: center;
+}
+
+.item-text {
+	margin: 0 3rem 0 .2rem;
+}
+
 .icon {
 	display: inline-block;
 	width: 0 2rem;
@@ -6,4 +15,9 @@
 .icon-img {
 	width: 1.2rem;
 	height: 1.2rem;
+}
+
+.checked {
+	color: #777;
+	text-decoration: line-through;
 }

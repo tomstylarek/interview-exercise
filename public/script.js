@@ -1,4 +1,18 @@
 
+const checkItem = (e) => {
+	e.preventDefault();
+
+	const itemId = e.target.closest('li').dataset.id;
+	fetch(`/checkItem?id=${itemId}`, { method: "PATCH"})
+		.then(res => res.json())
+		.then(data => {
+			const todoList = document.getElementById("todo-list");
+    		const newItems = getItems(data);
+    		todoList.removeChild(document.getElementById('items'));
+    		todoList.appendChild(newItems);
+		})
+}
+
 const removeItem = (e) => {
 	const itemId = e.target.closest('li').dataset.id;
 	fetch(`/removeItem?id=${itemId}`, { method: "PATCH"})
@@ -47,17 +61,19 @@ const displayEditForm = (e) => {
 }
 
 const editItem = (id, text) => {
-	fetch(`/editItem?id=${id}&text=${text}`, { method: "PATCH" })
-		.then(res => res.json())
-		.then(data => {
-			const todoList = document.getElementById("todo-list");
-    		const newItems = getItems(data);
-    		todoList.removeChild(document.getElementById('items'));
-    		todoList.appendChild(newItems);
+	if (e.target.itemText.value) {
+		fetch(`/editItem?id=${id}&text=${text}`, { method: "PATCH" })
+			.then(res => res.json())
+			.then(data => {
+				const todoList = document.getElementById("todo-list");
+	    		const newItems = getItems(data);
+	    		todoList.removeChild(document.getElementById('items'));
+	    		todoList.appendChild(newItems);
 
-    		// unable set item input
-    		document.getElementById('set-item').disabled = false;
-		})
+	    		// unable set item input
+	    		document.getElementById('set-item').disabled = false;
+			})
+	}
 }
 
 const handleSubmit = (e) => {
@@ -86,7 +102,26 @@ const getItems = (data) => {
 	data.forEach(item => {
 		const li = document.createElement('li');
 		li.dataset.id = item.id;
-		li.innerHTML = item.text;
+		li.classList.add('item');
+
+		// creating checkbox and adding listener for checked/unchecked state
+		const checkbox = document.createElement('input');
+		checkbox.type = 'checkbox';
+		checkbox.addEventListener('click', checkItem);
+		li.appendChild(checkbox);
+		
+		// adding text
+		const p = document.createElement('p');
+		p.innerHTML = item.text;
+		p.classList.add('item-text');
+		if (item.checked) {
+			p.classList.add('checked');
+			checkbox.checked = true;
+		} else {
+			p.classList.remove('checked');
+			checkbox.checked = false;
+		}
+		li.appendChild(p);
 
 		// creating edit button and adding listener for editing the item
 		const editBtn = document.createElement('span');
