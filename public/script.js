@@ -7,12 +7,16 @@ const removeItem = () => {
 const displayEditForm = (e) => {
 	const form = document.createElement('form');
 	const input = document.createElement('input');
-	const btn = document.createElement('button');
+	const editBtn = document.createElement('button');
+	const cancelBtn = document.createElement('button');
 
 	input.name = 'itemText';
 	input.placeholder = 'Edit text';
 
-	btn.addEventListener('click', () => {
+	editBtn.textContent = 'Edit';
+	cancelBtn.textContent = 'Cancel';
+
+	editBtn.addEventListener('click', () => {
 		if (input.value) {
 			const itemId = e.target.closest('li').dataset.id;
 			editItem(itemId, input.value);
@@ -20,9 +24,16 @@ const displayEditForm = (e) => {
 		}
 	});
 
-	form.id = 'edit-form';
+	cancelBtn.addEventListener('click', () => {
+		document.body.removeChild(form);
+
+		// unable set item input
+		document.getElementById('set-item').disabled = false;
+	});
+
 	form.appendChild(input);
-	form.appendChild(btn);
+	form.appendChild(editBtn);
+	form.appendChild(cancelBtn);
 
 	document.body.appendChild(form);
 }
@@ -35,15 +46,19 @@ const editItem = (id, text) => {
     		const newItems = getItems(data);
     		todoList.removeChild(document.getElementById('items'));
     		todoList.appendChild(newItems);
+
+    		// unable set item input
+    		document.getElementById('set-item').disabled = false;
 		})
 }
 
 const handleSubmit = (e) => {
 	e.preventDefault();
 
-	fetch(`/setNewItem?text=${e.target.itemText.value}`, {
-      method: 'PATCH',
-    })
+	if (e.target.itemText.value) {
+		fetch(`/setNewItem?text=${e.target.itemText.value}`, {
+	      method: 'PATCH',
+	    })
     	.then(res => res.json())
     	.then(data => {
     		const todoList = document.getElementById("todo-list");
@@ -51,7 +66,9 @@ const handleSubmit = (e) => {
     		e.target.itemText.value = '';
     		todoList.removeChild(document.getElementById('items'));
     		todoList.appendChild(newItems);
-    	})
+    	});
+	}
+	
 }
 
 const getItems = (data) => {
@@ -66,7 +83,11 @@ const getItems = (data) => {
 		// creating edit button and adding listener for editing the item
 		const editBtn = document.createElement('span');
 		editBtn.innerHTML = '<img class="icon-img" src="./icons/editar.svg">';
-		editBtn.addEventListener('click', displayEditForm);
+		editBtn.addEventListener('click', (e) => {
+			// disable set item input
+			document.getElementById('set-item').disabled = true;
+			displayEditForm(e);
+		});
 
 		// creating remove button and adding listener for removing the item
 		const removeBtn = document.createElement('span');
@@ -86,7 +107,7 @@ const getItems = (data) => {
 
 const createForm = () => {
 	const form = document.createElement('form');
-	form.innerHTML = '<input name="itemText" placeholder="New item"><button>Add</button>';
+	form.innerHTML = '<input id="set-item" name="itemText" placeholder="New item"><button>Add</button>';
 	
 	form.addEventListener('submit', handleSubmit);
 

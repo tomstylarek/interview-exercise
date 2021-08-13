@@ -15,12 +15,12 @@ const setNewItem = (req, res) => {
 const editItem = (req, res) => {
 	// find item and modify text
 	items.forEach(item => {
-		if (item.id === id) {
+		if (item.id === req.query.id) {
 			item.text = req.query.text;
 		}
 	})
 
-	return items;
+	res.send(items);
 }
 
 module.exports = {
