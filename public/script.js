@@ -42,11 +42,16 @@ const displayEditForm = (e) => {
 	const editBtn = document.createElement('button');
 	const cancelBtn = document.createElement('button');
 
+	form.classList.add('edit-item-form');
+
 	input.name = 'itemText';
 	input.placeholder = 'Edit text';
+	input.classList.add('edit-item-input');
 
 	editBtn.textContent = 'Edit';
 	cancelBtn.textContent = 'Cancel';
+	editBtn.classList.add('edit-item-btn');
+	cancelBtn.classList.add('edit-item-btn');
 
 	editBtn.addEventListener('click', (e) => {
 		e.preventDefault();
@@ -159,9 +164,13 @@ const getItems = (data) => {
 		removeBtn.innerHTML = '<img class="icon-img" src="./icons/basura.svg">';
 		removeBtn.addEventListener('click', removeItem);
 
+		const iconsContainer = document.createElement('div');
+		iconsContainer.classList.add('icons');
+		iconsContainer.appendChild(editBtn);
+		iconsContainer.appendChild(removeBtn);
+
 		// append to item
-		li.appendChild(editBtn);
-		li.appendChild(removeBtn);
+		li.appendChild(iconsContainer);
 
 		// append to item list
 		items.appendChild(li);
