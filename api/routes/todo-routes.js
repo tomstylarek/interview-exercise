@@ -7,14 +7,14 @@ const todoControllers = require('../controllers/todo-controllers.js');
 router.get('/getItems', todoControllers.getItems);
 
 // add new item to the database and response with the updated list of items
-router.patch('/setNewItem', todoControllers.setNewItem);
+router.post('/setNewItem', todoControllers.setNewItem);
 
 // edit the item and response with the updated list of items
-router.patch('/editItem', todoControllers.editItem);
+router.put('/editItem', todoControllers.editItem);
 
 // remove item from the list and response with the updated list of items
-router.patch('/removeItem', todoControllers.removeItem);
+router.delete('/removeItem', todoControllers.removeItem);
 
-router.patch('/checkItem', todoControllers.checkItem);
+router.put('/checkItem', todoControllers.checkItem);
 
 module.exports = router;

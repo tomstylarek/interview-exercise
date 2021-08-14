@@ -20,40 +20,28 @@ const getItems = (req, res) => {
 const setNewItem = (req, res) => {
 	pool.query('INSERT INTO items (description, checked) VALUES ($1, $2)', [req.query.text, false])
 		.then(response => {
-			pool.query('SELECT * FROM items')
-				.then(data => {
-					res.send(data.rows);
-				})
+			res.status(200).end();
 		});
 }
 
 const editItem = (req, res) => {
 	pool.query('UPDATE items SET description = $1 WHERE id = $2', [req.query.text, req.query.id])
 		.then(response => {
-			pool.query('SELECT * FROM items')
-				.then(data => {
-					res.send(data.rows);
-				})
+			res.status(200).end();
 		});
 }
 
 const removeItem = (req, res) => {
 	pool.query('DELETE FROM items WHERE id = $1', [req.query.id])
 		.then(response => {
-			pool.query('SELECT * FROM items')
-				.then(data => {
-					res.send(data.rows);
-				})
+			res.status(200).end();
 		});
 }
 
 const checkItem = (req, res) => {
 	pool.query('UPDATE items SET checked = CASE WHEN checked = FALSE THEN TRUE ELSE FALSE END WHERE id = $1', [req.query.id])
 		.then(response => {
-			pool.query('SELECT * FROM items')
-				.then(data => {
-					res.send(data.rows);
-				})
+			res.status(200).end();
 		});
 }
 

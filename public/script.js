@@ -3,26 +3,36 @@ const checkItem = (e) => {
 	e.preventDefault();
 
 	const itemId = e.target.closest('li').dataset.id;
-	fetch(`/checkItem?id=${itemId}`, { method: "PATCH"})
-		.then(res => res.json())
-		.then(data => {
-			const todoList = document.getElementById("todo-list");
-    		const newItems = getItems(data);
-    		todoList.removeChild(document.getElementById('items'));
-    		todoList.appendChild(newItems);
-		})
+	fetch(`/checkItem?id=${itemId}`, { method: "PUT"})
+		.then(res => {
+
+    		fetch('/getItems')
+				.then(res => res.json())
+				.then(data => {
+					const todoList = document.getElementById("todo-list");
+		    		const newItems = getItems(data);
+		    		todoList.removeChild(document.getElementById('items'));
+		    		todoList.appendChild(newItems);
+				});
+    		
+    	});
 }
 
 const removeItem = (e) => {
 	const itemId = e.target.closest('li').dataset.id;
-	fetch(`/removeItem?id=${itemId}`, { method: "PATCH"})
-		.then(res => res.json())
-		.then(data => {
-			const todoList = document.getElementById("todo-list");
-    		const newItems = getItems(data);
-    		todoList.removeChild(document.getElementById('items'));
-    		todoList.appendChild(newItems);
-		})
+	fetch(`/removeItem?id=${itemId}`, { method: "DELETE"})
+		.then(res => {
+
+    		fetch('/getItems')
+				.then(res => res.json())
+				.then(data => {
+					const todoList = document.getElementById("todo-list");
+		    		const newItems = getItems(data);
+		    		todoList.removeChild(document.getElementById('items'));
+		    		todoList.appendChild(newItems);
+				});
+    		
+    	});
 }
 
 // display form to edit the text of the item
@@ -38,7 +48,8 @@ const displayEditForm = (e) => {
 	editBtn.textContent = 'Edit';
 	cancelBtn.textContent = 'Cancel';
 
-	editBtn.addEventListener('click', () => {
+	editBtn.addEventListener('click', (e) => {
+		e.preventDefault();
 		if (input.value) {
 			const itemId = e.target.closest('li').dataset.id;
 			editItem(itemId, input.value);
@@ -61,40 +72,51 @@ const displayEditForm = (e) => {
 }
 
 const editItem = (id, text) => {
-	if (e.target.itemText.value) {
-		fetch(`/editItem?id=${id}&text=${text}`, { method: "PATCH" })
-			.then(res => res.json())
-			.then(data => {
-				const todoList = document.getElementById("todo-list");
-	    		const newItems = getItems(data);
-	    		todoList.removeChild(document.getElementById('items'));
-	    		todoList.appendChild(newItems);
+	if (text) {
+		fetch(`/editItem?id=${id}&text=${text}`, { method: "PUT" })
+			.then(res => {
 
-	    		// unable set item input
-	    		document.getElementById('set-item').disabled = false;
-			})
+	    		fetch('/getItems')
+					.then(res => res.json())
+					.then(data => {
+						const todoList = document.getElementById("todo-list");
+			    		const newItems = getItems(data);
+			    		todoList.removeChild(document.getElementById('items'));
+			    		todoList.appendChild(newItems);
+
+			    		// unable set item input
+			    		document.getElementById('set-item').disabled = false;
+					})
+	    		
+	    	});
 	}
 }
 
-const handleSubmit = (e) => {
+const setNewItem = (e) => {
 	e.preventDefault();
 
 	if (e.target.itemText.value) {
 		fetch(`/setNewItem?text=${e.target.itemText.value}`, {
-	      method: 'PATCH',
+	      method: 'POST',
 	    })
-    	.then(res => res.json())
-    	.then(data => {
-    		const todoList = document.getElementById("todo-list");
-    		const newItems = getItems(data);
-    		e.target.itemText.value = '';
-    		todoList.removeChild(document.getElementById('items'));
-    		todoList.appendChild(newItems);
+    	.then(res => {
+
+    		fetch('/getItems')
+				.then(res => res.json())
+				.then(data => {
+					const todoList = document.getElementById("todo-list");
+		    		const newItems = getItems(data);
+		    		e.target.itemText.value = '';
+		    		todoList.removeChild(document.getElementById('items'));
+		    		todoList.appendChild(newItems);
+				})
+    		
     	});
 	}
 	
 }
 
+// create the item list and assign all event handlers for editing, checking and deliting items
 const getItems = (data) => {
 	const items = document.createElement('ul');
 	items.id = "items";
@@ -148,25 +170,16 @@ const getItems = (data) => {
 	return items;
 }
 
-const createForm = () => {
-	const form = document.createElement('form');
-	form.innerHTML = '<input id="set-item" name="itemText" placeholder="New item"><button>Add</button>';
-	
-	form.addEventListener('submit', handleSubmit);
-
-	return form;
-}
-
 window.addEventListener('load', () => {
 
 	fetch('/getItems')
 		.then(res => res.json())
 		.then(data => {
+			const form = document.getElementById('set-item-form');
 			const todoList = document.getElementById("todo-list");
 			const items = getItems(data);
-			const form = createForm();
-
 			todoList.appendChild(items);
-			todoList.appendChild(form);
-		})
+			
+			form.addEventListener('submit', setNewItem);
+		});
 })
