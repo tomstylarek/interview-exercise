@@ -1,51 +1,60 @@
 const { v4: uuidv4 } = require('uuid');
+const { Pool } = require('pg');
+
+const pool = new Pool({
+	host: 'localhost', // local database
+	user: 'postgres', // default postgresql user
+	password: 'todoapp', // password for this database is empty
+	database: 'todoapp'
+});
 
 let items = [];
 
 const getItems = (req, res) => {
-	res.send(items);
+	pool.query('SELECT * FROM items')
+		.then(response => {
+			res.send(response.rows);	
+		})
 }
 
 const setNewItem = (req, res) => {
-	items.push({ text: req.query.text, id: uuidv4(), checked: false });
-
-	res.send(items);
+	pool.query('INSERT INTO items (description, checked) VALUES ($1, $2)', [req.query.text, false])
+		.then(response => {
+			pool.query('SELECT * FROM items')
+				.then(data => {
+					res.send(data.rows);
+				})
+		});
 }
 
 const editItem = (req, res) => {
-	// find item and modify text
-	items.forEach(item => {
-		if (item.id === req.query.id) {
-			item.text = req.query.text;
-		}
-	})
-
-	res.send(items);
+	pool.query('UPDATE items SET description = $1 WHERE id = $2', [req.query.text, req.query.id])
+		.then(response => {
+			pool.query('SELECT * FROM items')
+				.then(data => {
+					res.send(data.rows);
+				})
+		});
 }
 
 const removeItem = (req, res) => {
-	items.forEach((item, index) => {
-		if (item.id === req.query.id) {
-			items.splice(index, 1);
-		}
-	})
-
-	res.send(items);
+	pool.query('DELETE FROM items WHERE id = $1', [req.query.id])
+		.then(response => {
+			pool.query('SELECT * FROM items')
+				.then(data => {
+					res.send(data.rows);
+				})
+		});
 }
 
 const checkItem = (req, res) => {
-	console.log("checking");
-	items.forEach(item => {
-		if (item.id === req.query.id) {
-			if (item.checked) {
-				item.checked = false;
-			} else {
-				item.checked = true;
-			}
-		}
-	})
-
-	res.send(items);
+	pool.query('UPDATE items SET checked = CASE WHEN checked = FALSE THEN TRUE ELSE FALSE END WHERE id = $1', [req.query.id])
+		.then(response => {
+			pool.query('SELECT * FROM items')
+				.then(data => {
+					res.send(data.rows);
+				})
+		});
 }
 
 module.exports = {

@@ -112,7 +112,7 @@ const getItems = (data) => {
 		
 		// adding text
 		const p = document.createElement('p');
-		p.innerHTML = item.text;
+		p.innerHTML = item.description;
 		p.classList.add('item-text');
 		if (item.checked) {
 			p.classList.add('checked');
