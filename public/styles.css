@@ -45,10 +45,31 @@ ul {
 	margin-bottom: .3rem;
 }
 
+.group-item {
+	width: 80%;
+}
+
+.group-item-list {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: center;
+	width: 100%;
+	padding: .5rem 1rem;
+}
+
 .item-text {
 	margin: 0 0 0 .5rem;
 	width: 100%;
 	overflow: ;
+}
+
+.group-name {
+	cursor: pointer;
+}
+
+.group-name:hover {
+	color: #444;
 }
 
 .icons {
@@ -79,17 +100,23 @@ form {
 	justify-content: space-between;
 }
 
+.form-container {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	width: 40%;
+	position: relative;
+}
+
+.set-form {
+	position: absolute;
+	left: calc(50% - 10rem);
+}
+
 input {
 	background: #eee;
 	border: none;
 	padding: .5rem;
-}
-
-.set-item-input {
-	border-radius: .5rem 0 0 .5rem;
-}
-
-.edit-item-input {
 	border-radius: .5rem;
 }
 
@@ -98,13 +125,20 @@ button {
 	border: none;
 	padding: .5rem;
 	cursor: pointer;
-}
-
-.set-item-btn {
-	border-radius: 0 .5rem .5rem 0;
-}
-
-.edit-item-btn {
 	border-radius: .5rem;
 	margin: 0 .2rem;
+}
+
+.add-btn {
+	border-radius: 50%;
+	width: 2.5rem;
+	height: 2.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: .2rem;
+}
+
+.add-btn img {
+	display: block;
 }
