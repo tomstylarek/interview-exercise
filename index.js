@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const PORT = 3000;
 const app = express();
 
@@ -18,3 +17,8 @@ app.get('/', (req, res) => {
 });
 
 app.use(require('./api/routes/todo-routes.js'));
+
+// 404
+app.use((req, res) => {
+  res.status(404).send('Not Found');
+})
