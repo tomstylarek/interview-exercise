@@ -5,7 +5,7 @@ const pool = new Pool({
 	host: 'localhost', // local database
 	user: 'postgres', // default postgresql user
 	password: 'todoapp', // password for this database is empty
-	database: 'todoapp'
+	database: 'todoapp2'
 });
 
 let items = [];

@@ -36,13 +36,19 @@ const removeItem = (e) => {
 }
 
 // display form to edit the text of the item
-const displayEditForm = (e) => {
+const displayEditForm = (event) => {
 	const form = document.createElement('form');
 	const input = document.createElement('input');
 	const editBtn = document.createElement('button');
 	const cancelBtn = document.createElement('button');
 
+	// remove current opened edit form, if any
+	if (document.getElementById('edit-item-form')) {
+		document.body.removeChild(document.getElementById('edit-item-form'));
+	}
+
 	form.classList.add('edit-item-form');
+	form.id = 'edit-item-form';
 
 	input.name = 'itemText';
 	input.placeholder = 'Edit text';
@@ -56,7 +62,7 @@ const displayEditForm = (e) => {
 	editBtn.addEventListener('click', (e) => {
 		e.preventDefault();
 		if (input.value) {
-			const itemId = e.target.closest('li').dataset.id;
+			const itemId = event.target.closest('li').dataset.id;
 			editItem(itemId, input.value);
 			document.body.removeChild(form);
 		}
@@ -157,12 +163,22 @@ const getItems = (data) => {
 			// disable set item input
 			document.getElementById('set-item').disabled = true;
 			displayEditForm(e);
+			
 		});
 
 		// creating remove button and adding listener for removing the item
 		const removeBtn = document.createElement('span');
 		removeBtn.innerHTML = '<img class="icon-img" src="./icons/basura.svg">';
-		removeBtn.addEventListener('click', removeItem);
+		removeBtn.addEventListener('click', (e) => {
+			// remove edit form, if any
+			if (document.getElementById('edit-item-form')) {
+				document.body.removeChild(document.getElementById('edit-item-form'));
+				// unable set item form
+				document.getElementById('set-item').disabled = false;
+			}
+
+			removeItem(e);
+		});
 
 		const iconsContainer = document.createElement('div');
 		iconsContainer.classList.add('icons');
