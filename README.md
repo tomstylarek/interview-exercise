@@ -8,7 +8,7 @@ The tools and runtimes used in this project are the following:
 - ExpressJs v4.17.1
 - pg v8.7.1
 
-To install all necessary dependencies, run the bash script included in the project with the command:
+To install all necessary dependencies and start the server, run the bash script included in the project with the command:
 
 ```bash
 ./todoapp.sh
