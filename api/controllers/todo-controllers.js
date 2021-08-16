@@ -1,14 +1,11 @@
-const { v4: uuidv4 } = require('uuid');
 const { Pool } = require('pg');
 
 const pool = new Pool({
 	host: 'localhost', // local database
 	user: 'postgres', // default postgresql user
 	password: 'todoapp', // password for this database is empty
-	database: 'todoapp2'
+	database: 'todoapp'
 });
-
-let items = [];
 
 const getItems = (req, res) => {
 	pool.query('SELECT * FROM items WHERE group_id = 0')
